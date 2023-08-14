@@ -1,2 +1,2 @@
-# vba-excel
-vba modules/classes/forms possible to share between excel workbooks
+# vba
+contains specific projects, which can be shared between workbooks
