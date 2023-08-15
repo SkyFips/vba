@@ -9,13 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 ' ##############################################################################\
-' (c)2022 Scientific Games International GmbH                                   |
-'                                                                               |
 ' Author(s):      Philipp Gorkiewicz                                            |
-' Version:        1.0.0                                                         |
-' Creation date:  2022-04-02                                                    |
-' Last change:    2022-04-02                                                    |
-'                                                                               |
 ' Description:    logger interface                                              |
 '                                                                               |
 ' ##############################################################################|
