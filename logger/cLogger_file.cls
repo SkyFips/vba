@@ -13,7 +13,7 @@ Option Explicit
 ' Description: iLogger implementation for log output to txt file                |
 '                                                                               |
 ' ##############################################################################|
-'   version | description                                                       |
+'   Version | Description                                                       |
 '     1.0.0 | initial version                                                   |
 ' ##############################################################################/
 Implements iLogger
