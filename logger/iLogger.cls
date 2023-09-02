@@ -9,27 +9,18 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 ' ##############################################################################\
-' Author(s):      Philipp Gorkiewicz                                            |
-' Description:    logger interface                                              |
+'   Author(s):   Philipp Gorkiewicz                                             |
+'   Description: logger interface                                               |
 '                                                                               |
 ' ##############################################################################|
-'     Version | Description                                                     |
-'       1.0.0 | Initial Version                                                 |
+'   Version | Description                                                       |
+'     1.0.0 | initial version                                                   |
 '###############################################################################/
-Public Enum enumLogLevel
-  UNKNOWN
-  FATAL
-  WARN
-  FAILURE
-  INFO
-  DEBUGGER
-End Enum
+Public Property Get level() As logLevels
+End Property
 
-Public Property Get level() As enumLogLevel
+Public Property Let level(l As logLevels)
 End Property
-Public Property Let level(l As enumLogLevel)
-End Property
-Public Sub log(logLevel As enumLogLevel, _
-               logMessage As String)
-' log implementation, how it is logged0
+
+Public Sub log(logLevel As logLevels, logMessage As String)
 End Sub
