@@ -16,19 +16,14 @@ Attribute VB_Exposed = False
 
 Option Explicit
 ' ##############################################################################\
-' (c)2020 Scientific Games International GmbH                                   |
-'                                                                               |
-' Author(s):        Philipp Gorkiewicz                                          |
-' Version:          1.0.0                                                       |
-' Creation date:    2020-03-04                                                  |
-' Last change:      2020-03-04                                                  |
-'                                                                               |
-' Description:      implementation for iLogPrinter                              |
-'                   used to print to userform                                   |
+' Author(s):   Philipp Gorkiewicz                                               |
+' Version:     1.0.0                                                            |
+' Description: implementation for iLogPrinter                                   |
+'              used to print to userform                                        |
 '                                                                               |
 ' ##############################################################################|
-'     Version | Description                                                     |
-'       1.0.0 | Initial Version                                                 |
+'   Version | Description                                                       |
+'     1.0.0 | Initial Version                                                   |
 ' ##############################################################################/
 Implements iLogger
 
