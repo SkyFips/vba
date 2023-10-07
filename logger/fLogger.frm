@@ -90,5 +90,3 @@ End Property
 Private Property Let iLogger_level(l As enumLogLevel)
   level = l
 End Property
-
-
