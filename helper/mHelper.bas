@@ -5,8 +5,9 @@ Option Explicit
 ' Description: singleton modules                                                |
 '                                                                               |
 ' ##############################################################################|
-'     Version | Description                                                     |
-'       1.0.0 | Initial Version                                                 |
+'   Version | Description                                                       |
+'     1.0.0 | Initial Version                                                   |
+'     2.0.0 | remove concatenate function                                       |
 ' ##############################################################################/
 Dim oLogger As iLogger
 
@@ -56,17 +57,6 @@ Public Function nextWeekday(d As Date, _
     Else
       nextWeekday = d - Weekday(d) + wd
     End If
-  End If
-End Function
-Public Function concatenate(DELEMITER As String, arguments As Variant) As String
-  Dim c As iConcatenate
-  If TypeOf arguments Is Collection Then
-    Set c = New cConcatenate_collection
-    concatenate = c.concatenate(DELEMITER, arguments)
-  Else
-    Err.Raise 5, _
-              "mHelper.concatenate", _
-              "type of arguments not yet implemented"
   End If
 End Function
 Public Function hasKey(c As Collection, k As String) As Boolean
