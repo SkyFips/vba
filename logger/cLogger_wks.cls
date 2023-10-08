@@ -15,14 +15,15 @@ Option Explicit
 ' ##############################################################################|
 '   Version | Description                                                       |
 '     1.0.0 | Initial Version                                                   |
+'     1.0.1 | use enum from module                                              |
 ' ##############################################################################/
 Implements iLogger
+Dim oLevel  As logLevels
 
-Private level     As enumLogLevel
 Private objSheet  As Excel.Worksheet
 
 Private Sub Class_Initialize()
-  level = INFO
+  oLevel = INFO
 End Sub
 Private Property Get row() As LongPtr
   row = sheet.Cells(sheet.Rows.count, Columns("A").Column).End(xlUp).row + 1
@@ -43,25 +44,15 @@ Private Property Get sheet() As Excel.Worksheet
   End If
   Set sheet = objSheet
 End Property
-Private Function convertIdToName(logLevel As enumLogLevel) As String
-  Select Case logLevel
-    Case 0: convertIdToName = "UNKNOWN"
-    Case 1: convertIdToName = "FATAL"
-    Case 2: convertIdToName = "WARN"
-    Case 3: convertIdToName = "FAILURE"
-    Case 4: convertIdToName = "INFO"
-    Case 5: convertIdToName = "DEBUG"
-  End Select
-End Function
-Private Sub iLogger_Log(logLevel As enumLogLevel, Text As String)
-  If logLevel <= level Then
+Private Sub iLogger_Log(logLevel As logLevels, Text As String)
+  If logLevel <= oLevel Then
     Dim c As LongPtr
     Dim s As Boolean
     c = row
     s = Excel.Application.ScreenUpdating
     sheet.Select
     Excel.Application.ScreenUpdating = True
-    sheet.Cells(c, Columns("A").Column).Value = "[" & convertLogLevelToName(logLevel) & "] "
+    sheet.Cells(c, Columns("A").Column).Value = "[" & mLogger.logLevelAsName(logLevel) & "] "
     sheet.Cells(c, Columns("B").Column).Value = Now()
     sheet.Cells(c, Columns("C").Column).Value = Text
     sheet.Columns("A:C").EntireColumn.AutoFit
@@ -69,10 +60,10 @@ Private Sub iLogger_Log(logLevel As enumLogLevel, Text As String)
   End If
 End Sub
 
-Private Property Get iLogger_level() As enumLogLevel
-  iLogger_level = level
+Private Property Get iLogger_level() As logLevels
+  iLogger_level = oLevel
 End Property
-Private Property Let iLogger_level(l As enumLogLevel)
-  level = l
+Private Property Let iLogger_level(l As logLevels)
+  oLevel = l
 End Property
 
