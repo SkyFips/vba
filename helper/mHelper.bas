@@ -8,6 +8,7 @@ Option Explicit
 '   Version | Description                                                       |
 '     1.0.0 | Initial Version                                                   |
 '     2.0.0 | remove concatenate function                                       |
+'     2.1.0 | add concatenate function                                          |
 ' ##############################################################################/
 Dim oLogger As iLogger
 
@@ -21,7 +22,7 @@ End Property
 Public Function sheetExist(strSheetName As String, Optional wkb As Workbook) As Boolean
   On Error Resume Next
   If wkb Is Nothing Then Set wkb = ThisWorkbook
-  sheetExist = wkb.Sheets(strSheetName).index > 0
+  sheetExist = wkb.Sheets(strSheetName).Index > 0
 End Function
 Public Function strftime(d As Date, f As String) As String
 ' uses the same format(s) as ruby strftime
@@ -116,7 +117,19 @@ Public Function splitString(i As String, _
   Set splitString = New Collection
   Dim v As Variant
 
-  For Each v In split(i, DELEMITER)
-    splitString.Add v
+  For Each v In Split(i, DELEMITER)
+    splitString.add v
   Next v
+End Function
+Public Function concatenate(DELEMITER As String, _
+                            collInput As Collection) As String
+
+  Dim c As Integer
+  If (IsNull(collInput)) Then Exit Function
+  For c = 1 To collInput.count
+    concatenate = concatenate & collInput(c)
+    If c < collInput.count Then
+      concatenate = concatenate & DELEMITER
+    End If
+  Next c
 End Function
