@@ -1,2 +1,2 @@
 # vba
-contains specific projects, which can be shared between workbooks
+code to be shared between workbooks/projects
