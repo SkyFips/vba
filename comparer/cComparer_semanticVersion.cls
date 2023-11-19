@@ -9,14 +9,8 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 ' ##############################################################################\
-' (c)2018 Scientific Games International GmbH                                   |
-'                                                                               |
-' Author(s):      Philipp Gorkiewicz                                            |
-' Version:        2.1.0                                                         |
-' Creation date:  2018-09-23                                                    |
-' Last change:    2022-04-02                                                    |
-'                                                                               |
-' Description:    implementation for IComparer for Versions                     |
+' Author(s):   Philipp Gorkiewicz                                               |
+' Description: implementation for IComparer for Versions                        |
 '                 a version must look like the following                        |
 '                 a.b.c-prereleas+metadata (https://semver.org)                 |
 '                 a = Major Version                                             |
@@ -25,14 +19,6 @@ Option Explicit
 ' ##############################################################################|
 '     Version | Description                                                     |
 '       1.0.0 | Initial Version                                                 |
-'       1.0.1 | implement semantic versioning                                   |
-'       1.0.2 | add logging messages                                            |
-'       1.0.3 | renaming of variables                                           |
-'       1.1.0 | remove globLogger                                               |
-'       2.0.0 | make verify public and do not fail anymore in case of invalid   |
-'               version input, rename class                                     |
-'       2.1.0 | use local logger                                                |
-'       2.1.1 | remove unused variable                                          |
 ' ##############################################################################/
 Implements iComparer
 
