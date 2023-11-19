@@ -9,6 +9,7 @@ Option Explicit
 ' ##############################################################################|
 ' Version | Description                                                         |
 '   1.0.0 | Initial Version                                                     |
+'   1.0.1 | correct call var                                                    |
 ' ##############################################################################/
 Dim compare As iComparer
 Dim order   As sortOrder
@@ -125,6 +126,6 @@ Private Sub sort_enumerator(e As iEnumerator, _
       upper = upper - 1
     End If
   Wend
-  If (lowerBound < upper) Then Call qs_enumerator(e, lowerBound, upper, order)
-  If (lower < upperBound) Then Call qs_enumerator(e, lower, upperBound, order)
+  If (lowerBound < upper) Then Call sort_enumerator(e, lowerBound, upper)
+  If (lower < upperBound) Then Call sort_enumerator(e, lower, upperBound)
 End Sub
