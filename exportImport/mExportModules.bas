@@ -9,6 +9,7 @@ Option Explicit
 ' ##############################################################################|
 '   version | description                                                       |
 '     1.0.0 | Initial Version                                                   |
+'     1.0.1 | move "done" into the loop to allow loading from different folders |
 ' ##############################################################################/
 Dim oFileSys  As Object
 Dim oFolder   As Object
@@ -28,8 +29,8 @@ Private Sub ExportModules()
   Dim x As Byte
   x = 10
   Set oModules = Nothing
-  Set done = New Collection
   Do While modules.count > 0 And x > 0
+    Set done = New Collection
     For i = 1 To modules.count
       Debug.Print "[INFO] export """ & modules.Item(i).name & """"
       Call SearchModule(searchFolder, modules.Item(i).name & "." & extension(modules.Item(i)))
