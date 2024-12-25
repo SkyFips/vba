@@ -1,9 +1,12 @@
 # Logger
-A logging mechanism is essential, when providing small tools to the public/others.
+Two different approaches to provide logging in vba.  
 
-## Event driven logging
-Event driven logging is able via _cLogger.cls_, which fires an event, whenever a log is printed.  
-Printers can be added do that logger.
+## Event driven
+The main class is _cLogger.cls_, which fires _"printLog"_ whenever a Log is called.  
+Availalbe _"log printers"_ are:
+- file
+- watch window
+possible to add one or more printers to that class via _"addPrinters"_.
 
-## interface logging
+## interface
 Each logger implements iLogger interface and prints to the defined output, like watch window, file or userform.  
