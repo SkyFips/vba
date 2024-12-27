@@ -10,6 +10,7 @@ Option Explicit
 ' Version | Description                                                         |
 '   1.0.0 | Initial Version                                                     |
 '   1.0.1 | correct call var                                                    |
+'   1.0.2 | only call sort, if input count greater 0                            |
 ' ##############################################################################/
 Dim compare As iComparer
 Dim order   As sortOrder
@@ -25,11 +26,11 @@ Public Sub Sort(inputObject As Variant, _
   If TypeOf inputObject Is Collection Then
     Dim c As Collection
     Set c = inputObject
-    Call sort_collection(c, 1, c.count)
+    If c.count > 0 Then Call sort_collection(c, 1, c.count)
   ElseIf TypeOf inputObject Is iEnumerator Then
     Dim e As iEnumerator
     Set e = inputObject
-    Call sort_enumerator(e, 1, e.count)
+    If e.count > 0 Then Call sort_enumerator(e, 1, e.count)
   Else
     Err.Raise 17, _
               "mQuickSorter.Sort", _
@@ -93,8 +94,8 @@ Private Sub sort_enumerator(e As iEnumerator, _
                             lowerBound As LongPtr, _
                             upperBound As LongPtr)
   Dim center  As Variant
-  Dim lower   As Long
-  Dim upper   As Long
+  Dim lower   As LongPtr
+  Dim upper   As LongPtr
 
   lower = lowerBound
   upper = upperBound
