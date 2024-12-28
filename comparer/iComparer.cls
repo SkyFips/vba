@@ -8,17 +8,17 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "interface description for iComparer"
+Option Explicit
 ' ##############################################################################\
 ' Author(s):   Philipp Gorkiewicz                                               |
 ' License:     MIT (https://opensource.org/license/mit/)                        |
 ' Versioning:  https://semver.org                                               |
+' Source:      https://github.com/SkyFips/vba/tree/main/comparer                |
 ' Description: interface description of comparer                                |
 ' ------------------------------------------------------------------------------|
 ' Version | Description                                                         |
 '   1.0.0 | Initial Version                                                     |
 ' ##############################################################################/
-Option Explicit
-
 Public Enum compareResult
   equal = 0
   greater = 1

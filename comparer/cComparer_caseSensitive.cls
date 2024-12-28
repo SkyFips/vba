@@ -13,6 +13,7 @@ Option Explicit
 ' Author(s):   Philipp Gorkiewicz                                               |
 ' License:     MIT (https://opensource.org/license/mit/)                        |
 ' Versioning:  https://semver.org                                               |
+' Source:      https://github.com/SkyFips/vba/tree/main/comparer                |
 ' Description: implementation for iComparer for string comparison               |
 '              case sensitive                                                   |
 ' ------------------------------------------------------------------------------|
