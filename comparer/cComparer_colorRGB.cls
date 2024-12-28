@@ -13,6 +13,7 @@ Option Explicit
 ' Author(s):   Philipp Gorkiewicz                                               |
 ' License:     MIT (https://opensource.org/license/mit/)                        |
 ' Versioning:  https://semver.org                                               |
+' Source:      https://github.com/SkyFips/vba/tree/main/comparer                |
 ' Description: iComparer implementationfor RGB color comparison                 |
 ' ------------------------------------------------------------------------------|
 ' Version | Description                                                         |
@@ -22,8 +23,8 @@ Implements iComparer
 
 Private Function iComparer_compare(input_A As Variant, _
                                    input_B As Variant) As compareResult
-  Dim a As LongPtr
-  Dim b As LongPtr
+  Dim a As Long
+  Dim b As Long
 
   a = input_A
   b = input_B
