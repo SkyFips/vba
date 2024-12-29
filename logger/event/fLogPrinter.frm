@@ -13,17 +13,20 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 Option Explicit
 ' ##############################################################################\
 ' Author(s):   Philipp Gorkiewicz                                               |
 ' License:     MIT (https://opensource.org/license/mit/)                        |
 ' Versioning:  https://semver.org                                               |
+' Source:      https://github.com/SkyFips/vba/tree/main/logger                  |
 ' Description: a logger form to print log messages into an excel userform       |
 ' ------------------------------------------------------------------------------|
 ' Version | Description                                                         |
 '   1.0.0 | Initial Version                                                     |
 '   1.0.1 | correct enum name                                                   |
 '   1.1.0 | redraw the messages every time                                      |
+'   1.1.1 | use "asString" instead of "asName"                                  |
 ' ##############################################################################/
 Implements iLogPrinter
 Private WithEvents logger As cLogger
@@ -75,7 +78,7 @@ End Sub
 ' ######################################################
 Private Sub iLogPrinter_Log(logLevel As logLevels, Text As String)
   If logLevel <= level Then
-    collMessages.Add "[" & logger.asName(logLevel) & " " & Format(Now, "hh:mm:ss") & Right(Format(Timer, "0\.000"), 4) & "] " & Text
+    collMessages.Add "[" & mLogger.asString(logLevel) & " " & Format(Now, "hh:mm:ss") & Right(Format(Timer, "0\.000"), 4) & "] " & Text
     If Me.Controls.count <= 25 Then
       Set ctrl = Me.Controls.Add("Forms.Label.1", "lblMessage_" & collMessages.count)
       With ctrl

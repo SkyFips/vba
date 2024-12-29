@@ -118,12 +118,11 @@ Public Function splitString(i As String, _
   Dim v As Variant
 
   For Each v In Split(i, DELEMITER)
-    splitString.add v
+    splitString.Add v
   Next v
 End Function
 Public Function concatenate(DELEMITER As String, _
                             collInput As Collection) As String
-
   Dim c As Integer
   If (IsNull(collInput)) Then Exit Function
   For c = 1 To collInput.count

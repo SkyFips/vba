@@ -4,9 +4,10 @@ Option Explicit
 ' Author(s):   Philipp Gorkiewicz                                               |
 ' License:     MIT (https://opensource.org/license/mit/)                        |
 ' Versioning:  https://semver.org/                                              |
+' Source:      https://github.com/SkyFips/vba/tree/main/sorter                  |
 ' Description: quicksort for collection/iEnumerator                             |
 '              comparison done on iComparer object                              |
-' ##############################################################################|
+' ------------------------------------------------------------------------------|
 ' Version | Description                                                         |
 '   1.0.0 | Initial Version                                                     |
 '   1.0.1 | correct call var                                                    |
@@ -18,7 +19,7 @@ Public Enum sortOrder
   ascending = 0
   descending = 1
 End Enum
-Public Sub Sort(inputObject As Variant, _
+Public Sub Sort(ByVal inputObject As Object, _
                 comparer As iComparer, _
                 Optional order As sortOrder = ascending)
   Set compare = comparer
@@ -49,38 +50,38 @@ Private Sub sort_collection(coll As Collection, _
   lower = lowerBound
   upper = upperBound
 
-  If IsObject(coll.item((lower + upper) / 2)) Then
-    Set center = coll.item((lower + upper) / 2)
+  If IsObject(coll.Item((lower + upper) / 2)) Then
+    Set center = coll.Item((lower + upper) / 2)
   Else
-    center = coll.item((lower + upper) / 2)
+    center = coll.Item((lower + upper) / 2)
   End If
   While (lower <= upper)
     If order = ascending Then
-      While compare(coll.item(lower), center) = less And lower < upperBound
+      While compare(coll.Item(lower), center) = less And lower < upperBound
         lower = lower + 1
       Wend
-      While compare(center, coll.item(upper)) = less And upper > lowerBound
+      While compare(center, coll.Item(upper)) = less And upper > lowerBound
         upper = upper - 1
       Wend
     Else
-      While compare(coll.item(lower), center) = greater And lower < upperBound
+      While compare(coll.Item(lower), center) = greater And lower < upperBound
         lower = lower + 1
       Wend
-      While (compare(center, coll.item(upper)) = greater And upper > lowerBound)
+      While (compare(center, coll.Item(upper)) = greater And upper > lowerBound)
         upper = upper - 1
       Wend
     End If
     If (lower <= upper) Then
       Dim varTmp  As Variant
 
-      If IsObject(coll.item(lower)) Then
-        Set varTmp = coll.item(lower)
+      If IsObject(coll.Item(lower)) Then
+        Set varTmp = coll.Item(lower)
       Else
-        varTmp = coll.item(lower)
+        varTmp = coll.Item(lower)
       End If
-      coll.Add item:=coll.item(upper), After:=lower
+      coll.Add Item:=coll.Item(upper), After:=lower
       Call coll.Remove(lower)
-      coll.Add item:=varTmp, After:=upper
+      coll.Add Item:=varTmp, After:=upper
       Call coll.Remove(upper)
       lower = lower + 1
       upper = upper - 1
@@ -110,7 +111,7 @@ Private Sub sort_enumerator(e As iEnumerator, _
       While compare(e(lower), center) = less And lower < upperBound
         lower = lower + 1
       Wend
-      While compare(center, e.item(upper)) = less And upper > lowerBound
+      While compare(center, e.Item(upper)) = less And upper > lowerBound
         upper = upper - 1
       Wend
     Else

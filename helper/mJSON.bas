@@ -4,8 +4,7 @@ Option Explicit
 ' Author(s):   Philipp Gorkiewicz                                               |
 ' License:     MIT (https://opensource.org/license/mit/)                        |
 ' Versioning:  https://semver.org                                               |
-' Description: copied from https://github.com/VBA-tools/VBA-Web                 |
-'              JSON converter                                                   |
+' Description: copied from https://github.com/VBA-tools/VBA-Web/JSON converter  |
 '                                                                               |
 ' ##############################################################################|
 '   Version | Description                                                       |
@@ -19,31 +18,30 @@ Private Type jsonOptions
   ' This can lead to issues when BIGINT's are used (e.g. for Ids or Credit Cards), as they will be invalid above 15 digits
   ' See: http://support.microsoft.com/kb/269370
   '
-  ' By default, VBA-JSON will use String for numbers longer than 15 characters that contain only digits
+  ' By default, mJSON will use String for numbers longer than 15 characters that contain only digits
   ' to override set `JsonConverter.JsonOptions.UseDoubleForLargeNumbers = True`
   useDoubleForLargeNumbers As Boolean
 
   ' The JSON standard requires object keys to be quoted (" or '), use this option to allow unquoted keys
   allowUnquotedKeys As Boolean
 
-  ' The solidus (/) is not required to be escaped, use this option to escape them as \/ in ConvertToJson
+  ' The solidus (/) is not required to be escaped, use this option to escape them as \/ in generate
   escapeSolidus As Boolean
 End Type
-
-' Convert object (Dictionary/Collection/Array) to JSON
-'
-' @method generate
-' @param {Variant} JsonValue (Dictionary, Collection, or Array)
-' @param {Integer|String} Whitespace "Pretty" print json with given number of spaces per indentation (Integer) or given string
-' @return {String}
-''
 
 Private Property Get logger() As iLogger
   If oLogger Is Nothing Then Set oLogger = config.logger
   Set logger = oLogger
 End Property
 
-Public Function generate(ByVal jsonValue As Variant, Optional ByVal whiteSpace As Variant, Optional ByVal json_currentIndentation As Long = 0) As String
+' Convert object (Dictionary/Collection/Array) to JSON
+' @method generate
+' @param {Variant} JsonValue (Dictionary, Collection, or Array)
+' @param {Integer|String} Whitespace "Pretty" print json with given number of spaces per indentation (Integer) or given string
+' @return {String}
+Public Function generate(ByVal jsonValue As Variant, _
+                         Optional ByVal whiteSpace As Variant, _
+                         Optional ByVal json_currentIndentation As Long = 0) As String
   Dim json_buffer           As String
   Dim json_bufferPosition   As Long
   Dim json_bufferLength     As Long
@@ -307,7 +305,7 @@ Private Function parseObject(json_string As String, ByRef json_index As Long) As
   Set parseObject = CreateObject("Scripting.Dictionary")
   SkipSpaces json_string, json_index
   If VBA.Mid$(json_string, json_index, 1) <> "{" Then
-    Err.Raise 1, "mJSON.parseObject", parseErrorMessage(json_string, json_index, "Expecting '{'")
+    Err.Raise -10001, "mJSON.parseObject", parseErrorMessage(json_string, json_index, "Expecting '{'")
   Else
     json_index = json_index + 1
 
@@ -324,9 +322,9 @@ Private Function parseObject(json_string As String, ByRef json_index As Long) As
       json_key = parseKey(json_string, json_index)
       json_nextChar = peek(json_string, json_index)
       If json_nextChar = "[" Or json_nextChar = "{" Then
-        Set parseObject.item(json_key) = parseValue(json_string, json_index)
+        Set parseObject.Item(json_key) = parseValue(json_string, json_index)
       Else
-        parseObject.item(json_key) = parseValue(json_string, json_index)
+        parseObject.Item(json_key) = parseValue(json_string, json_index)
       End If
     Loop
   End If
@@ -335,14 +333,14 @@ End Function
 Private Function parseArray(json_string As String, ByRef json_index As Long) As Collection
   Set parseArray = New Collection
 
-  SkipSpaces json_string, json_index
+  Call SkipSpaces(json_string, json_index)
   If VBA.Mid$(json_string, json_index, 1) <> "[" Then
-    Err.Raise 1, "mJSON.parseArray", parseErrorMessage(json_string, json_index, "Expecting '['")
+    Err.Raise -10001, "mJSON.parseArray", parseErrorMessage(json_string, json_index, "Expecting '['")
   Else
     json_index = json_index + 1
 
     Do
-      SkipSpaces json_string, json_index
+      Call SkipSpaces(json_string, json_index)
       If VBA.Mid$(json_string, json_index, 1) = "]" Then
         json_index = json_index + 1
         Exit Function
@@ -357,7 +355,7 @@ Private Function parseArray(json_string As String, ByRef json_index As Long) As 
 End Function
 
 Private Function parseValue(json_string As String, ByRef json_index As Long) As Variant
-  SkipSpaces json_string, json_index
+  Call SkipSpaces(json_string, json_index)
   Select Case VBA.Mid$(json_string, json_index, 1)
   Case "{"
     Set parseValue = parseObject(json_string, json_index)
@@ -378,37 +376,37 @@ Private Function parseValue(json_string As String, ByRef json_index As Long) As 
     ElseIf VBA.InStr("+-0123456789", VBA.Mid$(json_string, json_index, 1)) Then
       parseValue = parseNumber(json_string, json_index)
     Else
-      Err.Raise 1, "mJSON.parseValue", parseErrorMessage(json_string, json_index, "Expecting 'STRING', 'NUMBER', null, true, false, '{', or '['")
+      Err.Raise -10001, "mJSON.parseValue", parseErrorMessage(json_string, json_index, "Expecting 'STRING', 'NUMBER', null, true, false, '{', or '['")
     End If
   End Select
 End Function
 
 Private Function parseString(json_string As String, ByRef json_index As Long) As String
-  Dim json_Quote As String
-  Dim json_Char As String
-  Dim json_Code As String
-  Dim json_buffer As String
+  Dim json_quote          As String
+  Dim json_char           As String
+  Dim json_code           As String
+  Dim json_buffer         As String
   Dim json_bufferPosition As Long
-  Dim json_bufferLength As Long
+  Dim json_bufferLength   As Long
 
-  SkipSpaces json_string, json_index
+  Call SkipSpaces(json_string, json_index)
 
   ' Store opening quote to look for matching closing quote
-  json_Quote = VBA.Mid$(json_string, json_index, 1)
+  json_quote = VBA.Mid$(json_string, json_index, 1)
   json_index = json_index + 1
 
   Do While json_index > 0 And json_index <= Len(json_string)
-    json_Char = VBA.Mid$(json_string, json_index, 1)
+    json_char = VBA.Mid$(json_string, json_index, 1)
 
-    Select Case json_Char
+    Select Case json_char
     Case "\"
       ' Escaped string, \\, or \/
       json_index = json_index + 1
-      json_Char = VBA.Mid$(json_string, json_index, 1)
+      json_char = VBA.Mid$(json_string, json_index, 1)
 
-      Select Case json_Char
+      Select Case json_char
       Case """", "\", "/", "'"
-        bufferAppend json_buffer, json_Char, json_bufferPosition, json_bufferLength
+        bufferAppend json_buffer, json_char, json_bufferPosition, json_bufferLength
         json_index = json_index + 1
       Case "b"
         bufferAppend json_buffer, vbBack, json_bufferPosition, json_bufferLength
@@ -428,34 +426,34 @@ Private Function parseString(json_string As String, ByRef json_index As Long) As
       Case "u"
         ' Unicode character escape (e.g. \u00a9 = Copyright)
         json_index = json_index + 1
-        json_Code = VBA.Mid$(json_string, json_index, 4)
-        bufferAppend json_buffer, VBA.ChrW(VBA.Val("&h" + json_Code)), json_bufferPosition, json_bufferLength
+        json_code = VBA.Mid$(json_string, json_index, 4)
+        bufferAppend json_buffer, VBA.ChrW(VBA.Val("&h" + json_code)), json_bufferPosition, json_bufferLength
         json_index = json_index + 4
       End Select
-    Case json_Quote
+    Case json_quote
       parseString = bufferToString(json_buffer, json_bufferPosition)
       json_index = json_index + 1
       Exit Function
     Case Else
-      bufferAppend json_buffer, json_Char, json_bufferPosition, json_bufferLength
+      bufferAppend json_buffer, json_char, json_bufferPosition, json_bufferLength
       json_index = json_index + 1
     End Select
   Loop
 End Function
 
 Private Function parseNumber(json_string As String, ByRef json_index As Long) As Variant
-  Dim json_Char As String
-  Dim json_value As String
-  Dim json_IsLargeNumber As Boolean
+  Dim json_char          As String
+  Dim json_value         As String
+  Dim json_isLargeNumber As Boolean
 
-  SkipSpaces json_string, json_index
+  Call SkipSpaces(json_string, json_index)
 
   Do While json_index > 0 And json_index <= Len(json_string)
-    json_Char = VBA.Mid$(json_string, json_index, 1)
+    json_char = VBA.Mid$(json_string, json_index, 1)
 
-    If VBA.InStr("+-0123456789.eE", json_Char) Then
+    If VBA.InStr("+-0123456789.eE", json_char) Then
       ' Unlikely to have massive number, so use simple append rather than buffer here
-      json_value = json_value & json_Char
+      json_value = json_value & json_char
       json_index = json_index + 1
     Else
       ' Excel only stores 15 significant digits, so any numbers larger than that are truncated
@@ -464,8 +462,8 @@ Private Function parseNumber(json_string As String, ByRef json_index As Long) As
       '
       ' Fix: Parse -> String, Convert -> String longer than 15/16 characters containing only numbers and decimal points -> Number
       ' (decimal doesn't factor into significant digit count, so if present check for 15 digits + decimal = 16)
-      json_IsLargeNumber = IIf(InStr(json_value, "."), Len(json_value) >= 17, Len(json_value) >= 16)
-      If Not options.useDoubleForLargeNumbers And json_IsLargeNumber Then
+      json_isLargeNumber = IIf(InStr(json_value, "."), Len(json_value) >= 17, Len(json_value) >= 16)
+      If Not options.useDoubleForLargeNumbers And json_isLargeNumber Then
         parseNumber = json_value
       Else
         ' VBA.Val does not use regional settings, so guard for comma is not needed
@@ -481,24 +479,24 @@ Private Function parseKey(json_string As String, ByRef json_index As Long) As St
   If VBA.Mid$(json_string, json_index, 1) = """" Or VBA.Mid$(json_string, json_index, 1) = "'" Then
     parseKey = parseString(json_string, json_index)
   ElseIf options.allowUnquotedKeys Then
-    Dim json_Char As String
+    Dim json_char As String
     Do While json_index > 0 And json_index <= Len(json_string)
-      json_Char = VBA.Mid$(json_string, json_index, 1)
-      If (json_Char <> " ") And (json_Char <> ":") Then
-        parseKey = parseKey & json_Char
+      json_char = VBA.Mid$(json_string, json_index, 1)
+      If (json_char <> " ") And (json_char <> ":") Then
+        parseKey = parseKey & json_char
         json_index = json_index + 1
       Else
         Exit Do
       End If
     Loop
   Else
-    Err.Raise 1, "mJSON.parseKey", parseErrorMessage(json_string, json_index, "Expecting '""' or '''")
+    Err.Raise -10001, "mJSON.parseKey", parseErrorMessage(json_string, json_index, "Expecting '""' or '''")
   End If
 
   ' Check for colon and skip if present or throw if not present
   SkipSpaces json_string, json_index
   If VBA.Mid$(json_string, json_index, 1) <> ":" Then
-    Err.Raise 1, "mJSON.parseKey", parseErrorMessage(json_string, json_index, "Expecting ':'")
+    Err.Raise -10001, "mJSON.parseKey", parseErrorMessage(json_string, json_index, "Expecting ':'")
   Else
     json_index = json_index + 1
   End If
@@ -520,67 +518,67 @@ End Function
 Private Function encode(ByVal json_Text As Variant) As String
   ' Reference: http://www.ietf.org/rfc/rfc4627.txt
   ' Escape: ", \, /, backspace, form feed, line feed, carriage return, tab
-  Dim json_index As Long
-  Dim json_Char As String
-  Dim json_AscCode As Long
-  Dim json_buffer As String
+  Dim json_index          As Long
+  Dim json_char           As String
+  Dim json_ascCode        As Long
+  Dim json_buffer         As String
   Dim json_bufferPosition As Long
-  Dim json_bufferLength As Long
+  Dim json_bufferLength   As Long
 
   For json_index = 1 To VBA.Len(json_Text)
-    json_Char = VBA.Mid$(json_Text, json_index, 1)
-    json_AscCode = VBA.AscW(json_Char)
+    json_char = VBA.Mid$(json_Text, json_index, 1)
+    json_ascCode = VBA.AscW(json_char)
 
     ' When AscW returns a negative number, it returns the twos complement form of that number.
     ' To convert the twos complement notation into normal binary notation, add 0xFFF to the return result.
     ' https://support.microsoft.com/en-us/kb/272138
-    If json_AscCode < 0 Then
-      json_AscCode = json_AscCode + 65536
+    If json_ascCode < 0 Then
+      json_ascCode = json_ascCode + 65536
     End If
 
     ' From spec, ", \, and control characters must be escaped (solidus is optional)
 
-    Select Case json_AscCode
+    Select Case json_ascCode
     Case 34
       ' " -> 34 -> \"
-      json_Char = "\"""
+      json_char = "\"""
     Case 92
       ' \ -> 92 -> \\
-      json_Char = "\\"
+      json_char = "\\"
     Case 47
       ' / -> 47 -> \/ (optional)
       If options.escapeSolidus Then
-        json_Char = "\/"
+        json_char = "\/"
       End If
     Case 8
       ' backspace -> 8 -> \b
-      json_Char = "\b"
+      json_char = "\b"
     Case 12
       ' form feed -> 12 -> \f
-      json_Char = "\f"
+      json_char = "\f"
     Case 10
       ' line feed -> 10 -> \n
-      json_Char = "\n"
+      json_char = "\n"
     Case 13
       ' carriage return -> 13 -> \r
-      json_Char = "\r"
+      json_char = "\r"
     Case 9
       ' tab -> 9 -> \t
-      json_Char = "\t"
+      json_char = "\t"
     Case 0 To 31, 127 To 65535
       ' Non-ascii characters -> convert to 4-digit hex
-      json_Char = "\u" & VBA.Right$("0000" & VBA.Hex$(json_AscCode), 4)
+      json_char = "\u" & VBA.Right$("0000" & VBA.Hex$(json_ascCode), 4)
     End Select
 
-    bufferAppend json_buffer, json_Char, json_bufferPosition, json_bufferLength
+    bufferAppend json_buffer, json_char, json_bufferPosition, json_bufferLength
   Next json_index
   encode = bufferToString(json_buffer, json_bufferPosition)
 End Function
 
-Private Function peek(json_string As String, ByVal json_index As Long, Optional json_NumberOfCharacters As Long = 1) As String
+Private Function peek(json_string As String, ByVal json_index As Long, Optional json_numberOfCharacters As Long = 1) As String
   ' "Peek" at the next number of characters without incrementing json_Index (ByVal instead of ByRef)
   SkipSpaces json_string, json_index
-  peek = VBA.Mid$(json_string, json_index, json_NumberOfCharacters)
+  peek = VBA.Mid$(json_string, json_index, json_numberOfCharacters)
 End Function
 
 Private Sub SkipSpaces(json_string As String, ByRef json_index As Long)
@@ -594,18 +592,18 @@ Private Function stringIsLargeNumber(json_string As Variant) As Boolean
   ' Check if the given string is considered a "large number"
   ' (See parseNumber)
 
-  Dim json_Length As Long
-  Dim json_CharIndex As Long
-  json_Length = VBA.Len(json_string)
+  Dim json_length As Long
+  Dim json_charIndex As Long
+  json_length = VBA.Len(json_string)
 
   ' Length with be at least 16 characters and assume will be less than 100 characters
-  If json_Length >= 16 And json_Length <= 100 Then
+  If json_length >= 16 And json_length <= 100 Then
     Dim json_CharCode As String
 
     stringIsLargeNumber = True
 
-    For json_CharIndex = 1 To json_Length
-      json_CharCode = VBA.Asc(VBA.Mid$(json_string, json_CharIndex, 1))
+    For json_charIndex = 1 To json_length
+      json_CharCode = VBA.Asc(VBA.Mid$(json_string, json_charIndex, 1))
       Select Case json_CharCode
       ' Look for .|0-9|E|e
       Case 46, 48 To 57, 69, 101
@@ -614,11 +612,11 @@ Private Function stringIsLargeNumber(json_string As Variant) As Boolean
         stringIsLargeNumber = False
         Exit Function
       End Select
-    Next json_CharIndex
+    Next json_charIndex
   End If
 End Function
 
-Private Function parseErrorMessage(json_string As String, ByRef json_index As Long, ErrorMessage As String) As String
+Private Function parseErrorMessage(json_string As String, ByRef json_index As Long, errorMessage As String) As String
   ' Provide detailed parse error message, including details of where and what occurred
   '
   ' Example:
@@ -636,11 +634,14 @@ Private Function parseErrorMessage(json_string As String, ByRef json_index As Lo
   If json_startIndex <= 0 Then json_startIndex = 1
   If json_stopIndex > VBA.Len(json_string) Then json_stopIndex = VBA.Len(json_string)
 
-  parseErrorMessage = "Error parsing JSON:" & VBA.vbNewLine & _
+  logger.log FAILURE, "Error parsing JSON:" & VBA.vbNewLine & _
                       VBA.Mid$(json_string, json_startIndex, json_stopIndex - json_startIndex + 1) & VBA.vbNewLine & _
                       VBA.Space$(json_index - json_startIndex) & "^" & VBA.vbNewLine & _
-                      ErrorMessage
-  logger.log FAILURE, parseErrorMessage
+                      errorMessage
+  parseErrorMessage = "Error parsing JSON:" & VBA.vbNewLine & _
+                      VBA.Mid$(json_string, json_startIndex, json_stopIndex - json_startIndex + 1) & VBA.vbNewLine & _
+                      errorMessage
+  
 End Function
 
 Private Sub bufferAppend(ByRef json_buffer As String, _
@@ -696,27 +697,22 @@ Private Function bufferToString(ByRef json_buffer As String, ByVal json_bufferPo
 End Function
 
 ' Convert JSON string to object (Dictionary/Collection)
-'
-' @method parse
-' @param {String} json_String
 ' @return {Object} (Dictionary or Collection)
 ' @throws 10001 - JSON parse error
-''
-Public Function parse(ByVal JsonString As String) As Object
+Public Function parse(ByVal jsonString As String) As Object
   Dim json_index As Long
   json_index = 1
-
+  logger.log DEBUGGER, "parse input json string"
   ' Remove vbCr, vbLf, and vbTab from json_String
-  JsonString = VBA.Replace(VBA.Replace(VBA.Replace(JsonString, VBA.vbCr, ""), VBA.vbLf, ""), VBA.vbTab, "")
+  jsonString = VBA.Replace(VBA.Replace(VBA.Replace(jsonString, VBA.vbCr, ""), VBA.vbLf, ""), VBA.vbTab, "")
 
-  SkipSpaces JsonString, json_index
-  Select Case VBA.Mid$(JsonString, json_index, 1)
+  SkipSpaces jsonString, json_index
+  Select Case VBA.Mid$(jsonString, json_index, 1)
   Case "{"
-    Set parse = parseObject(JsonString, json_index)
+    Set parse = parseObject(jsonString, json_index)
   Case "["
-    Set parse = parseArray(JsonString, json_index)
+    Set parse = parseArray(jsonString, json_index)
   Case Else
-    Err.Raise 1, "mJSON.parse", parseErrorMessage(JsonString, json_index, "Expecting '{' or '['")
+    Err.Raise -10001, "mJSON.parse", parseErrorMessage(jsonString, json_index, "Expecting '{' or '['")
   End Select
 End Function
-
