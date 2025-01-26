@@ -9,7 +9,7 @@ General principles:
 - no mac support (maybe later)
 
 ## projects:
-each directory within vba is its own 
+each _"project"_ has its own directory and a readme about it.
 - [comparer](https://github.com/SkyFips/vba/tree/main/comparer)  
 extends the possibility to compare objects, based on your own (implemented) rule
 - [enumerator](https://github.com/SkyFips/vba/tree/main/enumerator)  

@@ -127,8 +127,8 @@ Public Function generate(localDate As Date) As String
 End Function
 
 Private Function asSYSTEMTIME(d As Date) As SYSTEMTIME
-  asSYSTEMTIME.wYear = VBA.year(d)
-  asSYSTEMTIME.wMonth = VBA.month(d)
+  asSYSTEMTIME.wYear = VBA.Year(d)
+  asSYSTEMTIME.wMonth = VBA.Month(d)
   asSYSTEMTIME.wDay = VBA.day(d)
   asSYSTEMTIME.wHour = VBA.Hour(d)
   asSYSTEMTIME.wMinute = VBA.Minute(d)

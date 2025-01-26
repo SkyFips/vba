@@ -12,11 +12,12 @@ Option Explicit
 ' Author(s):   Philipp Gorkiewicz                                               |
 ' License:     MIT (https://opensource.org/license/mit/)                        |
 ' Versioning:  https://semver.org                                               |
+' Source:      https://github.com/SkyFips/vba/tree/main/logger                  |
 ' Description: iLogPrinter implementation for log output to txt file            |
-'                                                                               |
-' ##############################################################################|
-'   Version | Description                                                       |
-'     1.0.0 | initial version                                                   |
+' ------------------------------------------------------------------------------|
+' Version | Description                                                         |
+'   1.0.0 | initial version                                                     |
+'   1.0.1 | use "asString" instead of "asName"                                  |
 ' ##############################################################################/
 Implements iLogPrinter
 Private WithEvents logger As cLogger
@@ -45,14 +46,14 @@ Private Property Get txt() As Object
   Set txt = oTxt
 End Property
 Private Sub logger_printLog(logLevel As logLevels, logText As String)
-  If logLevel <= level Then txt.WriteLine "[" & logger.asName(logLevel) & "][" & Now() & "] " & logText
+  If logLevel <= level Then txt.WriteLine "[" & mLogger.asString(logLevel) & "][" & Now() & "] " & logText
 End Sub
 
 ' ------------------------------------
 ' iLogPrinter methods
 ' ------------------------------------
 Private Sub iLogPrinter_Log(logLevel As logLevels, Text As String)
-  If logLevel <= level Then txt.WriteLine "[" & logger.asName(logLevel) & "][" & Now() & "] " & Text
+  If logLevel <= level Then txt.WriteLine "[" & mLogger.asString(logLevel) & "][" & Now() & "] " & Text
 End Sub
 Private Property Get iLogPrinter_level() As logLevels
   If level = UNKNOWN Then level = logger.level
