@@ -19,7 +19,7 @@ Public Enum sortOrder
   ascending = 0
   descending = 1
 End Enum
-Public Sub Sort(ByVal inputObject As Object, _
+Public Sub Sort(inputObject As Object, _
                 comparer As iComparer, _
                 Optional order As sortOrder = ascending)
   Set compare = comparer

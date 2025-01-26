@@ -11,10 +11,11 @@ Option Explicit
 ' Version | Description                                                         |
 '   1.0.0 | Initial Version                                                     |
 '   1.0.1 | correct call var                                                    |
+'   1.0.2 | declare inputObject as object instead of Variant                    |
 ' ##############################################################################/
 Dim compare As iComparer
 Dim toFind As Variant
-Public Function Find(inputObject As Variant, _
+Public Function Find(inputObject As Object, _
                      comparer As iComparer, _
                      objToFind As Variant) As Variant
   Set compare = comparer

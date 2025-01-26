@@ -18,6 +18,7 @@ Option Explicit
 ' Version | Description                                                         |
 '   1.0.0 | initial Version                                                     |
 '   1.0.1 | use "asString" instead of "asName"                                  |
+'   1.0.2 | add time to log message                                             |
 ' ##############################################################################/
 Implements iLogPrinter
 Public WithEvents logger As cLogger
@@ -26,7 +27,7 @@ Private level As logLevels
 
 Private Sub iLogPrinter_Log(logLevel As logLevels, logText As String)
   If logLevel <= level Then
-    Debug.Print "[" & mLogger.asString(logLevel) & "] " & logText
+    Debug.Print "[" & mLogger.asString(logLevel) & " " & Format(Now, "hh:mm:ss") & Right(Format(Timer, "0\.000"), 4) & "] " & logText
   End If
 End Sub
 Private Sub logger_printLog(logLevel As logLevels, logText As String)
