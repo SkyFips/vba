@@ -18,6 +18,7 @@ Option Explicit
 ' Version | Description                                                         |
 '   1.0.0 | initial version                                                     |
 '   1.0.1 | use "asString" instead of "asName"                                  |
+'   1.1.0 | add error handling in case something is not printable               |
 ' ##############################################################################/
 Implements iLogPrinter
 Private WithEvents logger As cLogger
@@ -46,7 +47,14 @@ Private Property Get txt() As Object
   Set txt = oTxt
 End Property
 Private Sub logger_printLog(logLevel As logLevels, logText As String)
+  On Error GoTo PrintProblem
   If logLevel <= level Then txt.WriteLine "[" & mLogger.asString(logLevel) & "][" & Now() & "] " & logText
+  Exit Sub
+PrintProblem:
+  txt.WriteLine "[" & mLogger.asString(logLevel) & "][" & Now() & "] not able to print into txt file -> check the watch window"
+  Debug.Print logText
+  Debug.Print vbLf
+  Err.Clear
 End Sub
 
 ' ------------------------------------
