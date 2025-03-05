@@ -15,8 +15,8 @@ Option Explicit
 ' Source:      https://github.com/SkyFips/vba/tree/main/enumerator              |
 ' Description: enumerator interface                                             |
 ' ------------------------------------------------------------------------------|
-'   version | description                                                       |
-'     1.0.0 | Initial Version                                                   |
+' Version | description                                                         |
+'   1.0.0 | Initial Version                                                     |
 ' ##############################################################################/
 Public Property Get NewEnum() As IUnknown
 Attribute NewEnum.VB_UserMemId = -4
