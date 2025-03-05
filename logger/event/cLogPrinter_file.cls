@@ -18,7 +18,7 @@ Option Explicit
 ' Version | Description                                                         |
 '   1.0.0 | initial version                                                     |
 '   1.0.1 | use "asString" instead of "asName"                                  |
-'   1.1.0 | add error handling in case something is not printable               |
+'   1.0.2 | add error handling in case something is not printable               |
 ' ##############################################################################/
 Implements iLogPrinter
 Private WithEvents logger As cLogger
