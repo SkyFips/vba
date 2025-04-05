@@ -9,8 +9,11 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 ' ##############################################################################\
-'   Author(s):   Philipp Gorkiewicz                                             |
-'   Description: iLogger as watchWindow                                         |
+' Author(s):   Philipp Gorkiewicz                                               |
+' License:     MIT (https://opensource.org/license/mit/)                        |
+' Versioning:  https://semver.org                                               |
+' Source:      https://github.com/SkyFips/vba/tree/main/logger/interface        |
+' Description: iLogger as watchWindow                                           |
 '                                                                               |
 ' ##############################################################################|
 '   Version | Description                                                       |
