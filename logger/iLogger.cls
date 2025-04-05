@@ -9,8 +9,11 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 ' ##############################################################################\
-'   Author(s):   Philipp Gorkiewicz                                             |
-'   Description: logger interface                                               |
+' Author(s):   Philipp Gorkiewicz                                               |
+' License:     MIT (https://opensource.org/license/mit/)                        |
+' Versioning:  https://semver.org                                               |
+' Source:      https://github.com/SkyFips/vba/tree/main/logger                  |
+' Description: logger interface                                                 |
 '                                                                               |
 ' ##############################################################################|
 '   Version | Description                                                       |
