@@ -3,10 +3,12 @@ Option Explicit
 ' ##############################################################################\
 ' Author(s):   Philipp Gorkiewicz                                               |
 ' License:     MIT (https://opensource.org/license/mit/)                        |
+' Source:      https://github.com/SkyFips/vba/blob/main/helper/mIso8601.bas     |
 ' Description: Iso8601 parser/generater                                         |
 '              https://en.wikipedia.org/wiki/ISO_8601                           |
 ' ##############################################################################|
 '   Version | Description                                                       |
+'     1.0.1 | Capital SubMatches, add source                                    |
 '     1.0.0 | Initial Version                                                   |
 ' ##############################################################################/
 Dim oRegEx  As Object
@@ -87,23 +89,23 @@ Public Function parse(isoString As String, Optional asLocalDate As Boolean = Fal
   regEx.Pattern = "^(\d{4})-(\d{2})-(\d{2})[tT](\d{2}):(\d{2}):(\d{2})(?:\.\d{3})?([zZ]|(?:[+-])(\d{2}):?(\d{2}))$"
   regEx.Global = True
   
-  If Not regEx.test(isoString) Then
+  If Not regEx.Test(isoString) Then
     logger.log FAILURE, "the provided string (" & isoString & ") does not match expectation (e.g. 2020-03-04T05:31:11+00:00)"
     Err.Raise 5, _
               "mConverter_date.parseIso8601", _
               "the provided string (" & isoString & ") does not match expectation (e.g. 2020-03-04T05:31:11+00:00)"
   End If
   
-  Set matches = regEx.execute(isoString)
+  Set matches = regEx.Execute(isoString)
   With matches(0)
-    parse = VBA.DateSerial(VBA.CInt(.submatches(0)), VBA.CInt(.submatches(1)), VBA.CInt(.submatches(2))) + _
-            VBA.TimeSerial(.submatches(3), .submatches(4), .submatches(5))
+    parse = VBA.DateSerial(VBA.CInt(.SubMatches(0)), VBA.CInt(.SubMatches(1)), VBA.CInt(.SubMatches(2))) + _
+            VBA.TimeSerial(.SubMatches(3), .SubMatches(4), .SubMatches(5))
     'logger.log INFO, CStr(parseIso8601)
-    Select Case Left(.submatches(6), 1)
+    Select Case Left(.SubMatches(6), 1)
     Case "+"
-      parse = parse - TimeSerial(.submatches(7), .submatches(8), 0)
+      parse = parse - TimeSerial(.SubMatches(7), .SubMatches(8), 0)
     Case "-"
-      parse = parse + TimeSerial(.submatches(7), .submatches(8), 0)
+      parse = parse + TimeSerial(.SubMatches(7), .SubMatches(8), 0)
     End Select
   End With
   If asLocalDate Then parse = convertToLocalDate(parse)
